@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AI Investment Analyst — Sequential Task Agent | IBM SkillsBuild</title>
+    <meta name="description" content="An AI-powered Investment Analyst built with IBM Orchestrate and IBM Granite. A sequential task agent that gathers financial data, benchmarks competitors, reads market sentiment, and delivers explainable investment recommendations.">
+    <meta name="theme-color" content="#020617">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="AI Investment Analyst — Sequential Task Agent">
+    <meta property="og:description" content="Automate financial analysis with IBM Granite AI and sequential task agents.">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%88%3C/text%3E%3C/svg%3E">
+
+    <!-- Google Fonts: Poppins (display) + Inter (body/data) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Poppins:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- AOS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+window.wxOConfiguration = {
+orchestrationID: "a1918df2941f49fd81d10ed5ddd81a4a_01a2d7ab-943f-4fd3-83f3-c7a5326b3b4a",
+hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+rootElementID: "root",
+deploymentPlatform: "ibmcloud",
+crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/a1918df2941f49fd81d10ed5ddd81a4a:01a2d7ab-943f-4fd3-83f3-c7a5326b3b4a::",
+chatOptions: {
+agentId: "d36b79c3-d564-402c-8f91-ef3b584f8f8d",
+}
+};
+setTimeout(function () {
+const script = document.createElement('script');
+script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+script.addEventListener('load', function () {
+wxoLoader.init();
+});
+document.head.appendChild(script);
+}, 0);
+
+</script>
+    <!-- ============================================= -->
+    <!-- 1. LOADING SCREEN                              -->
+    <!-- ============================================= -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <span class="loader-logo-icon"><i class="fa-solid fa-chart-line"></i></span>
+                <span class="loader-logo-text">Sequential<span class="accent">AI</span></span>
+            </div>
+            <div class="loader-spinner" aria-hidden="true">
+                <span class="spinner-ring"></span>
+                <span class="spinner-ring"></span>
+                <span class="spinner-ring"></span>
+            </div>
+            <p class="loader-text">Initializing AI Investment Analyst<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span></p>
+            <div class="loader-progress-track">
+                <div class="loader-progress-bar" id="loader-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- 2. NAVBAR                                      -->
+    <!-- ============================================= -->
+    <header>
+        <nav class="navbar" id="navbar">
+            <div class="container navbar-container">
+                <a href="#home" class="navbar-logo">
+                    <span class="logo-icon"><i class="fa-solid fa-chart-line"></i></span>
+                    <span class="logo-text">Sequential<span class="accent">AI</span></span>
+                </a>
+
+                <ul class="navbar-links" id="navbar-links">
+                    <li><a href="#home" class="nav-link active" data-nav="home">Home</a></li>
+                    <li><a href="#features" class="nav-link" data-nav="features">Features</a></li>
+                    <li><a href="#workflow" class="nav-link" data-nav="workflow">Workflow</a></li>
+                    <li><a href="#dashboard" class="nav-link" data-nav="dashboard">Dashboard</a></li>
+                    <li><a href="#analysis" class="nav-link" data-nav="analysis">Analysis</a></li>
+                    <li><a href="#contact" class="nav-link" data-nav="contact">Contact</a></li>
+                </ul>
+
+                <div class="navbar-actions">
+                    <a href="#analysis" class="btn btn-primary btn-sm navbar-cta">
+                        <i class="fa-solid fa-bolt"></i> Analyze Now
+                    </a>
+                    <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navbar-links">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+
+        <!-- ============================================= -->
+        <!-- 3. HERO SECTION                                -->
+        <!-- ============================================= -->
+        <section class="hero" id="home">
+            <div class="hero-bg" aria-hidden="true">
+                <div class="hero-grid"></div>
+                <div class="glow-orb orb-1"></div>
+                <div class="glow-orb orb-2"></div>
+                <div class="glow-orb orb-3"></div>
+                <div class="hero-ticker">
+                    <div class="ticker-track" id="ticker-track"></div>
+                </div>
+            </div>
+
+            <div class="container hero-container">
+                <div class="hero-badge" data-aos="fade-down">
+                    <span class="badge-dot"></span> Powered by IBM Orchestrate &amp; IBM Granite
+                </div>
+
+                <div class="hero-terminal" id="hero-terminal" data-aos="fade-up">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span id="typing-text"></span><span class="cursor-blink" aria-hidden="true">|</span>
+                </div>
+
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="80">
+                    AI Investment Analyst
+                </h1>
+                <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="140">
+                    Automate Financial Analysis with IBM Granite AI and Sequential Task Agents
+                </p>
+                <p class="hero-description" data-aos="fade-up" data-aos-delay="200">
+                    A nine-step sequential agent that gathers financial data, extracts KPIs, benchmarks competitors,
+                    reads market sentiment, detects risk, and produces a boardroom-ready investment recommendation —
+                    the way a human analyst would, at machine speed.
+                </p>
+
+                <div class="hero-buttons" data-aos="fade-up" data-aos-delay="260">
+                    <a href="#analysis" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze Company
+                    </a>
+                    <a href="#dashboard" class="btn btn-outline btn-lg">
+                        <i class="fa-solid fa-gauge-high"></i> View Dashboard
+                    </a>
+                </div>
+
+                <div class="hero-stats" data-aos="fade-up" data-aos-delay="320">
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-companies" data-count="500" data-suffix="+">0</span>
+                        <p class="stat-label">Companies Analyzed</p>
+                    </div>
+                    <div class="stat-divider" aria-hidden="true"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-accuracy" data-count="97" data-suffix="%">0</span>
+                        <p class="stat-label">AI Accuracy</p>
+                    </div>
+                    <div class="stat-divider" aria-hidden="true"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-reports" data-count="1200" data-suffix="+">0</span>
+                        <p class="stat-label">Reports Generated</p>
+                    </div>
+                    <div class="stat-divider" aria-hidden="true"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-coverage" data-count="40" data-suffix="+">0</span>
+                        <p class="stat-label">Market Coverage</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-scroll-indicator" aria-hidden="true"><span></span></div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 4. ABOUT PROJECT                               -->
+        <!-- ============================================= -->
+        <section class="section" id="about-project">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">About the Project</span>
+                    <h2 class="section-title">Built for the IBM SkillsBuild Hackathon</h2>
+                    <p class="section-subtitle">A sequential AI agent that reasons through a company the way an equity analyst does — one verified step at a time.</p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-text" data-aos="fade-right">
+                        <div class="about-block">
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Problem Statement</h3>
+                            <p>Manual investment research is slow and fragmented. Analysts jump between filings, ratio
+                                spreadsheets, news feeds, and competitor data just to answer one question: is this a
+                                good investment? The process is repetitive, hard to standardize, and easy to get
+                                wrong under time pressure.</p>
+                        </div>
+                        <div class="about-block">
+                            <h3><i class="fa-solid fa-bullseye"></i> Objectives</h3>
+                            <ul class="about-list">
+                                <li><i class="fa-solid fa-check"></i> Automate end-to-end financial data collection and validation</li>
+                                <li><i class="fa-solid fa-check"></i> Chain sequential AI tasks that mirror a real analyst workflow</li>
+                                <li><i class="fa-solid fa-check"></i> Score risk and sentiment alongside the fundamentals</li>
+                                <li><i class="fa-solid fa-check"></i> Output a single, explainable BUY / HOLD / SELL call</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="about-cards" data-aos="fade-left">
+                        <div class="ibm-card">
+                            <div class="ibm-card-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                            <h3>IBM Orchestrate</h3>
+                            <p>Coordinates and sequences every task the agent performs, so each step's output feeds cleanly into the next.</p>
+                        </div>
+                        <div class="ibm-card">
+                            <div class="ibm-card-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <h3>IBM Granite</h3>
+                            <p>Enterprise-grade foundation models power the reasoning behind every KPI read, risk flag, and recommendation.</p>
+                        </div>
+                        <div class="ibm-card">
+                            <div class="ibm-card-icon"><i class="fa-solid fa-layer-group"></i></div>
+                            <h3>Sequential AI</h3>
+                            <p>A nine-step chained pipeline, not a single black-box prediction — every output can be traced back to a step.</p>
+                        </div>
+                        <div class="ibm-card">
+                            <div class="ibm-card-icon"><i class="fa-solid fa-globe"></i></div>
+                            <h3>Market Intelligence</h3>
+                            <p>Contextualizes company fundamentals against competitors and live market sentiment for a fuller picture.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 5. FEATURES SECTION                            -->
+        <!-- ============================================= -->
+        <section class="section section-alt" id="features">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Capabilities</span>
+                    <h2 class="section-title">Everything an analyst does, automated</h2>
+                    <p class="section-subtitle">Ten focused capabilities work together behind one simple interface.</p>
+                </div>
+
+                <div class="features-grid">
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="feature-icon"><i class="fa-solid fa-database"></i></div>
+                        <h3>Automated Data Gathering</h3>
+                        <p>Pulls financial statements, filings, and market data automatically — no manual spreadsheet work.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="60">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                        <h3>Financial KPI Analysis</h3>
+                        <p>Extracts and tracks the key performance indicators that actually move investment decisions.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="120">
+                        <div class="feature-icon"><i class="fa-solid fa-calculator"></i></div>
+                        <h3>Financial Ratio Calculation</h3>
+                        <p>Computes PE, ROE, debt, and margin ratios instantly, consistently, and without error.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="180">
+                        <div class="feature-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <h3>Competitor Benchmarking</h3>
+                        <p>Places a company side by side with its closest industry peers across every core metric.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="feature-icon"><i class="fa-solid fa-newspaper"></i></div>
+                        <h3>Market Sentiment Analysis</h3>
+                        <p>Reads the market's mood from news flow and analyst commentary in real time.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="60">
+                        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h3>Risk Detection</h3>
+                        <p>Flags financial, operational, and market risk signals before they show up in your portfolio.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="120">
+                        <div class="feature-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                        <h3>Predictive Insights</h3>
+                        <p>Projects likely trends using sequential AI reasoning over historical patterns.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="180">
+                        <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+                        <h3>AI Recommendations</h3>
+                        <p>Delivers one clear BUY, HOLD, or SELL call — backed by transparent, traceable reasoning.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="feature-icon"><i class="fa-solid fa-file-lines"></i></div>
+                        <h3>Structured Reports</h3>
+                        <p>Generates boardroom-ready reports formatted for fast, confident decision-making.</p>
+                    </article>
+                    <article class="feature-card" data-aos="fade-up" data-aos-delay="60">
+                        <div class="feature-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                        <h3>Interactive Dashboard</h3>
+                        <p>Visualizes every metric in one live, explorable command center — no page reloads.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 6. HOW IT WORKS — SEQUENTIAL TIMELINE           -->
+        <!-- ============================================= -->
+        <section class="section" id="workflow">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">How It Works</span>
+                    <h2 class="section-title">Nine steps, one continuous chain</h2>
+                    <p class="section-subtitle">Every step's output becomes the next step's input — that sequence is the whole point.</p>
+                </div>
+
+                <ol class="timeline">
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">01</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-database timeline-icon"></i>
+                            <h3>Collect Financial Data</h3>
+                            <p>The agent gathers filings, statements, and live market data for the selected company.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">02</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-circle-check timeline-icon"></i>
+                            <h3>Validate Information</h3>
+                            <p>Cross-checks every data point for accuracy and consistency before analysis begins.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">03</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-list-check timeline-icon"></i>
+                            <h3>Extract KPIs</h3>
+                            <p>Identifies the core performance indicators that drive the investment decision.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">04</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-calculator timeline-icon"></i>
+                            <h3>Calculate Financial Ratios</h3>
+                            <p>Computes PE, ROE, debt, and profitability ratios automatically.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">05</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-scale-balanced timeline-icon"></i>
+                            <h3>Compare Competitors</h3>
+                            <p>Benchmarks the company against its closest industry rivals.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">06</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-newspaper timeline-icon"></i>
+                            <h3>Analyze Market Sentiment</h3>
+                            <p>Gauges investor and media sentiment from recent market activity.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">07</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-shield-halved timeline-icon"></i>
+                            <h3>Detect Risks</h3>
+                            <p>Surfaces financial, operational, and market risk signals worth flagging.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">08</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-brain timeline-icon"></i>
+                            <h3>Generate AI Recommendation</h3>
+                            <p>Synthesizes every prior step into a single BUY / HOLD / SELL call.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-step" data-aos="fade-up">
+                        <div class="timeline-marker"><span class="timeline-number">09</span></div>
+                        <div class="timeline-content">
+                            <i class="fa-solid fa-file-invoice timeline-icon"></i>
+                            <h3>Generate Investment Report</h3>
+                            <p>Compiles a structured, shareable report of the complete analysis.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 7. COMPANY ANALYSIS SECTION                    -->
+        <!-- ============================================= -->
+        <section class="section section-alt" id="analysis">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Try It</span>
+                    <h2 class="section-title">Run a live company analysis</h2>
+                    <p class="section-subtitle">Search a company and let the agent return its full financial snapshot.</p>
+                </div>
+
+                <div class="analysis-panel glass-card" data-aos="fade-up">
+                    <div class="analysis-search">
+                        <label for="company-search-input" class="sr-only">Search company</label>
+                        <div class="search-input-wrap">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="company-search-input" class="search-input" list="company-datalist" placeholder="Search a company — Apple, Tesla, TCS, NVIDIA..." autocomplete="off">
+                            <datalist id="company-datalist">
+                                <option value="Apple"></option>
+                                <option value="Microsoft"></option>
+                                <option value="Google"></option>
+                                <option value="Tesla"></option>
+                                <option value="Amazon"></option>
+                                <option value="NVIDIA"></option>
+                                <option value="Reliance"></option>
+                                <option value="TCS"></option>
+                                <option value="Infosys"></option>
+                            </datalist>
+                        </div>
+                        <div class="quick-picks" id="quick-picks">
+                            <button type="button" class="quick-pick" data-company="Apple">Apple</button>
+                            <button type="button" class="quick-pick" data-company="Microsoft">Microsoft</button>
+                            <button type="button" class="quick-pick" data-company="Google">Google</button>
+                            <button type="button" class="quick-pick" data-company="Tesla">Tesla</button>
+                            <button type="button" class="quick-pick" data-company="Amazon">Amazon</button>
+                            <button type="button" class="quick-pick" data-company="NVIDIA">NVIDIA</button>
+                            <button type="button" class="quick-pick" data-company="Reliance">Reliance</button>
+                            <button type="button" class="quick-pick" data-company="TCS">TCS</button>
+                            <button type="button" class="quick-pick" data-company="Infosys">Infosys</button>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-lg analyze-btn" id="analyze-btn">
+                            <i class="fa-solid fa-bolt"></i> Analyze
+                        </button>
+                    </div>
+
+                    <p class="demo-badge"><i class="fa-solid fa-flask"></i> Simulated data for demonstration purposes</p>
+
+                    <div class="analysis-empty" id="analysis-empty">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        <p>Search or pick a company above to run the sequential analysis agent.</p>
+                    </div>
+
+                    <div class="analysis-result hidden" id="analysis-result">
+                        <div class="ar-header">
+                            <div class="ar-avatar" id="ar-avatar">A</div>
+                            <div>
+                                <h3 id="ar-company-name">Apple Inc.</h3>
+                                <span class="ar-ticker" id="ar-ticker">AAPL · NASDAQ</span>
+                            </div>
+                            <span class="ar-status" id="ar-status"><i class="fa-solid fa-circle-check"></i> Analysis Complete</span>
+                        </div>
+                        <div class="ar-grid">
+                            <div class="ar-metric">
+                                <span class="ar-label">Current Price</span>
+                                <span class="ar-value" id="ar-price" data-count="198.45" data-decimals="2" data-prefix="$">$0</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">Market Cap</span>
+                                <span class="ar-value" id="ar-marketcap" data-count="3.05" data-decimals="2" data-prefix="$" data-suffix="T">$0</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">Revenue</span>
+                                <span class="ar-value" id="ar-revenue" data-count="391.4" data-decimals="1" data-prefix="$" data-suffix="B">$0</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">Net Income</span>
+                                <span class="ar-value" id="ar-netincome" data-count="97.3" data-decimals="1" data-prefix="$" data-suffix="B">$0</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">EPS</span>
+                                <span class="ar-value" id="ar-eps" data-count="6.42" data-decimals="2" data-prefix="$">$0</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">PE Ratio</span>
+                                <span class="ar-value" id="ar-pe" data-count="30.9" data-decimals="1">0</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">ROE</span>
+                                <span class="ar-value" id="ar-roe" data-count="147.9" data-decimals="1" data-suffix="%">0%</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">Debt Ratio</span>
+                                <span class="ar-value" id="ar-debt" data-count="1.45" data-decimals="2" data-suffix="x">0x</span>
+                            </div>
+                            <div class="ar-metric">
+                                <span class="ar-label">Profit Margin</span>
+                                <span class="ar-value" id="ar-margin" data-count="24.9" data-decimals="1" data-suffix="%">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 8. DASHBOARD                                   -->
+        <!-- ============================================= -->
+        <section class="section" id="dashboard">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Command Center</span>
+                    <h2 class="section-title">Live investment dashboard</h2>
+                    <p class="section-subtitle">Every core metric for the selected company, at a glance.</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                        <span class="dashboard-card-label">Current Price</span>
+                        <span class="dashboard-card-value" id="dash-price" data-count="198.45" data-decimals="2" data-prefix="$">$0</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="60">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-coins"></i></div>
+                        <span class="dashboard-card-label">Revenue</span>
+                        <span class="dashboard-card-value" id="dash-revenue" data-count="391.4" data-decimals="1" data-prefix="$" data-suffix="B">$0</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="120">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                        <span class="dashboard-card-label">Net Profit</span>
+                        <span class="dashboard-card-value" id="dash-netprofit" data-count="97.3" data-decimals="1" data-prefix="$" data-suffix="B">$0</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="180">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-building-columns"></i></div>
+                        <span class="dashboard-card-label">Market Cap</span>
+                        <span class="dashboard-card-value" id="dash-marketcap" data-count="3.05" data-decimals="2" data-prefix="$" data-suffix="T">$0</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-scale-unbalanced"></i></div>
+                        <span class="dashboard-card-label">PE Ratio</span>
+                        <span class="dashboard-card-value" id="dash-pe" data-count="30.9" data-decimals="1">0</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="60">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <span class="dashboard-card-label">ROE</span>
+                        <span class="dashboard-card-value" id="dash-roe" data-count="147.9" data-decimals="1" data-suffix="%">0%</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="120">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <span class="dashboard-card-label">Risk Score</span>
+                        <span class="dashboard-card-value" id="dash-riskscore" data-count="24" data-decimals="0" data-suffix="/100">0/100</span>
+                    </div>
+                    <div class="dashboard-card" data-aos="fade-up" data-aos-delay="180">
+                        <div class="dashboard-card-icon"><i class="fa-solid fa-robot"></i></div>
+                        <span class="dashboard-card-label">AI Score</span>
+                        <span class="dashboard-card-value" id="dash-aiscore" data-count="88" data-decimals="0" data-suffix="/100">0/100</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 9. CHARTS                                      -->
+        <!-- ============================================= -->
+        <section class="section section-alt" id="charts">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Visualized</span>
+                    <h2 class="section-title">Charts that update with every analysis</h2>
+                    <p class="section-subtitle">Five live views into price, performance, sentiment, and the competitive field.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card chart-card-large" data-aos="fade-up">
+                        <div class="chart-card-header">
+                            <h3><i class="fa-solid fa-chart-line"></i> Stock Price Trend</h3>
+                            <div class="chart-range" id="chart-range" role="group" aria-label="Chart time range">
+                                <button type="button" class="chart-range-btn" data-range="1W">1W</button>
+                                <button type="button" class="chart-range-btn active" data-range="1M">1M</button>
+                                <button type="button" class="chart-range-btn" data-range="6M">6M</button>
+                                <button type="button" class="chart-range-btn" data-range="1Y">1Y</button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="stockPriceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="60">
+                        <div class="chart-card-header">
+                            <h3><i class="fa-solid fa-chart-column"></i> Revenue Trend</h3>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="120">
+                        <div class="chart-card-header">
+                            <h3><i class="fa-solid fa-arrow-trend-up"></i> Profit Trend</h3>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="profitChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="180">
+                        <div class="chart-card-header">
+                            <h3><i class="fa-solid fa-chart-pie"></i> Market Sentiment</h3>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="sentimentChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="240">
+                        <div class="chart-card-header">
+                            <h3><i class="fa-solid fa-radar" aria-hidden="true"></i><i class="fa-solid fa-chart-simple"></i> Competitor Comparison</h3>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="competitorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 10. COMPETITOR COMPARISON                      -->
+        <!-- ============================================= -->
+        <section class="section" id="competitors">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Benchmarking</span>
+                    <h2 class="section-title">How the field compares</h2>
+                    <p class="section-subtitle">Best value in each row is highlighted. Figures are simulated for demonstration.</p>
+                </div>
+
+                <div class="table-wrapper" data-aos="fade-up">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Metric</th>
+                                <th scope="col">Apple</th>
+                                <th scope="col">Microsoft</th>
+                                <th scope="col">Google</th>
+                                <th scope="col">Tesla</th>
+                                <th scope="col">Amazon</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Market Cap</th>
+                                <td>$3.05T</td>
+                                <td class="best">$3.15T</td>
+                                <td>$2.15T</td>
+                                <td>$0.85T</td>
+                                <td>$2.00T</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Revenue</th>
+                                <td>$391.4B</td>
+                                <td>$245.0B</td>
+                                <td>$307.0B</td>
+                                <td>$97.0B</td>
+                                <td class="best">$590.0B</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Net Income</th>
+                                <td class="best">$97.3B</td>
+                                <td>$88.0B</td>
+                                <td>$73.0B</td>
+                                <td>$7.9B</td>
+                                <td>$30.0B</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">PE Ratio</th>
+                                <td>30.9</td>
+                                <td>35.2</td>
+                                <td class="best">24.1</td>
+                                <td>68.4</td>
+                                <td>40.7</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">ROE</th>
+                                <td class="best">147.9%</td>
+                                <td>34.5%</td>
+                                <td>28.6%</td>
+                                <td>8.2%</td>
+                                <td>18.4%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Profit Margin</th>
+                                <td>24.9%</td>
+                                <td class="best">36.1%</td>
+                                <td>23.9%</td>
+                                <td>8.1%</td>
+                                <td>5.1%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="table-legend"><span class="legend-swatch"></span> Highlighted cell = strongest value in that row</p>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 11. MARKET SENTIMENT                           -->
+        <!-- ============================================= -->
+        <section class="section section-alt" id="sentiment">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Sentiment</span>
+                    <h2 class="section-title">What the market is feeling right now</h2>
+                    <p class="section-subtitle">Aggregated from recent news flow and analyst commentary.</p>
+                </div>
+
+                <div class="sentiment-grid">
+                    <div class="sentiment-card positive" data-aos="fade-up" data-aos-delay="0">
+                        <div class="sentiment-icon"><i class="fa-solid fa-face-smile-beam"></i></div>
+                        <h3>Positive</h3>
+                        <span class="sentiment-value" id="sentiment-positive-value" data-count="62" data-suffix="%">0%</span>
+                        <div class="progress-track">
+                            <div class="progress-bar" id="sentiment-positive-bar" data-percent="62"></div>
+                        </div>
+                        <div class="sentiment-tags">
+                            <span class="tag">Earnings beat</span>
+                            <span class="tag">Analyst upgrades</span>
+                        </div>
+                    </div>
+                    <div class="sentiment-card neutral" data-aos="fade-up" data-aos-delay="80">
+                        <div class="sentiment-icon"><i class="fa-solid fa-face-meh"></i></div>
+                        <h3>Neutral</h3>
+                        <span class="sentiment-value" id="sentiment-neutral-value" data-count="25" data-suffix="%">0%</span>
+                        <div class="progress-track">
+                            <div class="progress-bar" id="sentiment-neutral-bar" data-percent="25"></div>
+                        </div>
+                        <div class="sentiment-tags">
+                            <span class="tag">Mixed guidance</span>
+                            <span class="tag">Sector rotation</span>
+                        </div>
+                    </div>
+                    <div class="sentiment-card negative" data-aos="fade-up" data-aos-delay="160">
+                        <div class="sentiment-icon"><i class="fa-solid fa-face-frown"></i></div>
+                        <h3>Negative</h3>
+                        <span class="sentiment-value" id="sentiment-negative-value" data-count="13" data-suffix="%">0%</span>
+                        <div class="progress-track">
+                            <div class="progress-bar" id="sentiment-negative-bar" data-percent="13"></div>
+                        </div>
+                        <div class="sentiment-tags">
+                            <span class="tag">Margin pressure</span>
+                            <span class="tag">Regulatory watch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 12. RISK ANALYSIS                              -->
+        <!-- ============================================= -->
+        <section class="section" id="risk">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Risk</span>
+                    <h2 class="section-title">Risk analysis, quantified</h2>
+                    <p class="section-subtitle">A single risk score, backed by the reasoning behind it.</p>
+                </div>
+
+                <div class="risk-panel glass-card" data-aos="fade-up">
+                    <div class="risk-meter">
+                        <svg viewBox="0 0 180 180" class="risk-ring" aria-hidden="true">
+                            <circle cx="90" cy="90" r="70" class="risk-ring-track"></circle>
+                            <circle cx="90" cy="90" r="70" class="risk-ring-progress" id="risk-progress-circle" data-score="24" data-circumference="439.8"></circle>
+                        </svg>
+                        <div class="risk-meter-label">
+                            <span class="risk-score-text" id="risk-score-text" data-count="24" data-decimals="0">0</span>
+                            <span class="risk-score-max">/ 100</span>
+                        </div>
+                    </div>
+
+                    <div class="risk-details">
+                        <div class="risk-levels" id="risk-levels">
+                            <span class="risk-badge low active" data-level="low"><i class="fa-solid fa-circle"></i> Low Risk</span>
+                            <span class="risk-badge medium" data-level="medium"><i class="fa-solid fa-circle"></i> Medium Risk</span>
+                            <span class="risk-badge high" data-level="high"><i class="fa-solid fa-circle"></i> High Risk</span>
+                        </div>
+                        <div class="risk-reason">
+                            <h3><i class="fa-solid fa-comment-dots"></i> Why this score</h3>
+                            <p id="risk-reason-text">Strong free cash flow, low relative debt, and consistent margins keep the overall risk profile low, despite ordinary market volatility.</p>
+                        </div>
+                        <div class="risk-recommendations">
+                            <h3><i class="fa-solid fa-lightbulb"></i> Recommendations</h3>
+                            <ul id="risk-recommendations-list">
+                                <li><i class="fa-solid fa-check"></i> Suitable for long-term core holdings</li>
+                                <li><i class="fa-solid fa-check"></i> Monitor upcoming earnings guidance</li>
+                                <li><i class="fa-solid fa-check"></i> Watch supply chain and regulatory news</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 13. AI RECOMMENDATION                          -->
+        <!-- ============================================= -->
+        <section class="section section-alt" id="recommendation">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">The Verdict</span>
+                    <h2 class="section-title">Step nine: the AI recommendation</h2>
+                    <p class="section-subtitle">Every prior step folds into one explainable call.</p>
+                </div>
+
+                <div class="recommendation-card glass-card" data-aos="fade-up">
+                    <div class="rec-top">
+                        <div class="rec-badge buy" id="rec-badge">
+                            <i class="fa-solid fa-circle-up"></i>
+                            <span id="rec-badge-text">BUY</span>
+                        </div>
+                        <div class="rec-growth">
+                            <span class="rec-growth-label">Growth Potential</span>
+                            <div class="progress-track">
+                                <div class="progress-bar" id="rec-growth-bar" data-percent="82"></div>
+                            </div>
+                            <span class="rec-growth-value" id="rec-growth-value" data-count="82" data-suffix="%">0%</span>
+                        </div>
+                    </div>
+
+                    <p class="rec-reasoning" id="rec-reasoning">
+                        Consistent double-digit margins, an expanding services segment, and a fortress balance sheet
+                        outweigh near-term risks from a maturing smartphone cycle. The agent's sequential analysis
+                        supports accumulating on weakness rather than waiting for a pullback.
+                    </p>
+
+                    <div class="swot-grid">
+                        <div class="swot-card strengths">
+                            <h3><i class="fa-solid fa-bolt"></i> Strengths</h3>
+                            <ul>
+                                <li>Strong brand loyalty and ecosystem lock-in</li>
+                                <li>Robust free cash flow generation</li>
+                                <li>Industry-leading profit margins</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card weaknesses">
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Weaknesses</h3>
+                            <ul>
+                                <li>High dependency on flagship product revenue</li>
+                                <li>Slower growth in saturated markets</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card opportunities">
+                            <h3><i class="fa-solid fa-seedling"></i> Opportunities</h3>
+                            <ul>
+                                <li>Expansion of services and wearables</li>
+                                <li>Growth in emerging markets</li>
+                                <li>AI integration across the product line</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card threats">
+                            <h3><i class="fa-solid fa-shield-halved"></i> Threats</h3>
+                            <ul>
+                                <li>Intensifying competition</li>
+                                <li>Regulatory scrutiny in major markets</li>
+                                <li>Global supply chain dependencies</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 14. TECHNOLOGY STACK                           -->
+        <!-- ============================================= -->
+        <section class="section" id="tech-stack">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Under the Hood</span>
+                    <h2 class="section-title">Technology stack</h2>
+                    <p class="section-subtitle">Built on IBM's AI stack, rendered with a lightweight, framework-free frontend.</p>
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="0">
+                        <i class="fa-solid fa-microchip"></i>
+                        <h3>IBM Granite</h3>
+                        <p>Foundation models for financial reasoning</p>
+                    </div>
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="60">
+                        <i class="fa-solid fa-diagram-project"></i>
+                        <h3>IBM Orchestrate</h3>
+                        <p>Sequential agent orchestration</p>
+                    </div>
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="120">
+                        <i class="fa-brands fa-html5"></i>
+                        <h3>HTML5</h3>
+                        <p>Semantic, accessible markup</p>
+                    </div>
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="180">
+                        <i class="fa-brands fa-css3-alt"></i>
+                        <h3>CSS3</h3>
+                        <p>Custom glassmorphism design system</p>
+                    </div>
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="0">
+                        <i class="fa-brands fa-js"></i>
+                        <h3>JavaScript</h3>
+                        <p>Vanilla ES6, zero frameworks</p>
+                    </div>
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="60">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <h3>Chart.js</h3>
+                        <p>Real-time interactive visualization</p>
+                    </div>
+                    <div class="tech-card" data-aos="zoom-in" data-aos-delay="120">
+                        <i class="fa-brands fa-font-awesome"></i>
+                        <h3>Font Awesome</h3>
+                        <p>Scalable vector iconography</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================= -->
+        <!-- 15. CONTACT SECTION                            -->
+        <!-- ============================================= -->
+        <section class="section section-alt" id="contact">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">Get in Touch</span>
+                    <h2 class="section-title">Questions about the project?</h2>
+                    <p class="section-subtitle">Built for the IBM SkillsBuild Hackathon — happy to walk through how it works.</p>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-info" data-aos="fade-right">
+                        <h3>Let's talk</h3>
+                        <p>Reach out about the build, the IBM technologies behind it, or collaborating on the next
+                            version of the agent.</p>
+                        <ul class="contact-info-list">
+                            <li><i class="fa-solid fa-envelope"></i> hello@sequentialai.dev</li>
+                            <li><i class="fa-solid fa-clock"></i> Typically replies within 24 hours</li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> IBM SkillsBuild Hackathon submission</li>
+                        </ul>
+                        <div class="contact-socials">
+                            <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                            <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="https://skillsbuild.org/" target="_blank" rel="noopener" aria-label="IBM SkillsBuild"><i class="fa-solid fa-graduation-cap"></i></a>
+                        </div>
+                    </div>
+
+                    <form class="contact-form" id="contact-form" data-aos="fade-left" novalidate>
+                        <div class="form-group">
+                            <label for="contact-name">Name</label>
+                            <input type="text" id="contact-name" name="name" placeholder="Your name" autocomplete="name">
+                            <span class="error-message" id="name-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" name="email" placeholder="you@example.com" autocomplete="email">
+                            <span class="error-message" id="email-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" name="message" rows="5" placeholder="Tell us what you'd like to know..."></textarea>
+                            <span class="error-message" id="message-error"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg" id="contact-submit">
+                            <i class="fa-solid fa-paper-plane"></i> Send Message
+                        </button>
+                        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================= -->
+    <!-- 16. FOOTER                                     -->
+    <!-- ============================================= -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#home" class="navbar-logo">
+                        <span class="logo-icon"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="logo-text">Sequential<span class="accent">AI</span></span>
+                    </a>
+                    <p>An AI-powered Investment Analyst built with IBM Orchestrate and IBM Granite for the IBM
+                        SkillsBuild Hackathon.</p>
+                    <div class="footer-socials">
+                        <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                        <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://skillsbuild.org/" target="_blank" rel="noopener" aria-label="IBM SkillsBuild"><i class="fa-solid fa-graduation-cap"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#workflow">Workflow</a></li>
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#analysis">Analysis</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Project</h4>
+                    <ul>
+                        <li><a href="#about-project">About</a></li>
+                        <li><a href="#tech-stack">Technology</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/" target="_blank" rel="noopener">GitHub</a></li>
+                        <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li>
+                        <li><a href="https://skillsbuild.org/" target="_blank" rel="noopener">IBM SkillsBuild</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year">2026</span> Sequential Task Agent — Built for the IBM SkillsBuild Hackathon.</p>
+                <p class="footer-tagline">Designed &amp; engineered as a portfolio-grade AI demo.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+    <noscript>
+        <div class="noscript-banner">
+            This experience requires JavaScript to run the sequential analysis agent. Please enable JavaScript to continue.
+        </div>
+    </noscript>
+
+    <!-- Third-party libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <!-- App logic -->
+    <script src="app.js"></script>
+</body>
+</html>
